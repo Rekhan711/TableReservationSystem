@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
-        userService.registerUser(user);
+        userService.registerUser(user); // теперь метод есть
         return "redirect:/auth/login";
     }
 }

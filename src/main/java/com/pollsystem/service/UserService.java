@@ -8,4 +8,6 @@ public interface UserService {
     User saveUser(User user);
     Optional<User> findByUsername(String username);
     List<User> findAll();
+
+    User registerUser(User user); // добавили
 }
