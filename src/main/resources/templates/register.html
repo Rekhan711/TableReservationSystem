@@ -8,12 +8,12 @@
 <body>
 <h2>Регистрация</h2>
 
-<!-- Сообщение об ошибке -->
+
 <div th:if="${errorMessage}">
   <p style="color: red;" th:text="${errorMessage}"></p>
 </div>
 
-<!-- Сообщение об успешной регистрации -->
+
 <div th:if="${successMessage}">
   <p style="color: green;" th:text="${successMessage}"></p>
 </div>
