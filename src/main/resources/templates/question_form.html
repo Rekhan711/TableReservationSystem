@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить вопрос</title>
+</head>
+<body>
+<h2>Добавить вопрос</h2>
+
+<form th:action="@{/questions/add}" th:object="${question}" method="post">
+    <!-- скрытое поле: ID опроса -->
+    <input type="hidden" th:field="*{poll.id}"/>
+
+    <label for="text">Текст вопроса:</label>
+    <input type="text" id="text" th:field="*{text}" required/>
+
+    <br/><br/>
+    <button type="submit">Сохранить</button>
+</form>
+
+<br/>
+<a th:href="@{/polls}">Назад к списку опросов</a>
+</body>
+</html>
