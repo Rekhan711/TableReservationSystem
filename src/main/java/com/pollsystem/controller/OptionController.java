@@ -14,35 +14,34 @@ public class OptionController {
 
     private final OptionService optionService;
 
-    @GetMapping("/create/{questionId}")
-    public String createOptionForm(@PathVariable Long questionId, Model model) {
-        model.addAttribute("option", new Option());
-        model.addAttribute("questionId", questionId);
-        return "option/create";
-    }
-
     @PostMapping("/create/{questionId}")
     public String createOption(@PathVariable Long questionId, @ModelAttribute Option option) {
-        optionService.createOption(questionId, option);
+        optionService.saveOption(option); // вместо createOption
         return "redirect:/polls/" + option.getQuestion().getPoll().getId();
     }
 
     @GetMapping("/edit/{id}")
     public String editOptionForm(@PathVariable Long id, Model model) {
-        model.addAttribute("option", optionService.getOptionById(id));
+        model.addAttribute("option", optionService.findById(id).orElseThrow());
         return "option/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String editOption(@PathVariable Long id, @ModelAttribute Option option) {
-        optionService.updateOption(id, option);
+        option.setId(id); // чтобы не потерялся ID
+        optionService.saveOption(option); // вместо updateOption
         return "redirect:/polls/" + option.getQuestion().getPoll().getId();
     }
 
     @GetMapping("/delete/{id}")
     public String deleteOption(@PathVariable Long id) {
-        Long pollId = optionService.getOptionById(id).getQuestion().getPoll().getId();
-        optionService.deleteOption(id);
+        Long pollId = optionService.findById(id)
+                .orElseThrow()
+                .getQuestion()
+                .getPoll()
+                .getId();
+        optionService.deleteById(id);
         return "redirect:/polls/" + pollId;
     }
+
 }

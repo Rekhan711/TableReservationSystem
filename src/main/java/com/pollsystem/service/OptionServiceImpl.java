@@ -15,8 +15,8 @@ public class OptionServiceImpl implements OptionService {
     private final OptionRepository optionRepository;
 
     @Override
-    public Option saveOption(Option option) {
-        return optionRepository.save(option);
+    public void saveOption(Option option) {
+        optionRepository.save(option);
     }
 
     @Override
