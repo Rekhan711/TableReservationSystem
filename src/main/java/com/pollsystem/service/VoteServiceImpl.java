@@ -1,6 +1,8 @@
 package com.pollsystem.service;
 
+import com.pollsystem.entity.Option;
 import com.pollsystem.entity.Vote;
+import com.pollsystem.repository.OptionRepository;
 import com.pollsystem.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
+    private final OptionRepository optionRepository; // нужен для поиска варианта
 
     @Override
     public Vote saveVote(Vote vote) {
@@ -27,5 +30,16 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public List<Vote> findAll() {
         return voteRepository.findAll();
+    }
+
+    @Override
+    public Vote castVote(Long optionId) {
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option not found with id " + optionId));
+
+        Vote vote = new Vote();
+        vote.setOption(option);
+
+        return voteRepository.save(vote);
     }
 }

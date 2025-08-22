@@ -16,33 +16,39 @@ public class QuestionController {
 
     @GetMapping("/create/{pollId}")
     public String createQuestionForm(@PathVariable Long pollId, Model model) {
-        model.addAttribute("question", new Question());
+        Question question = new Question();
+        model.addAttribute("question", question);
         model.addAttribute("pollId", pollId);
         return "question/create";
     }
 
     @PostMapping("/create/{pollId}")
     public String createQuestion(@PathVariable Long pollId, @ModelAttribute Question question) {
-        questionService.createQuestion(pollId, question);
+        // тут важно: вопрос должен ссылаться на опрос
+        // предполагается, что в Question есть setPoll()
+        questionService.saveQuestion(question);
         return "redirect:/polls/" + pollId;
     }
 
     @GetMapping("/edit/{id}")
     public String editQuestionForm(@PathVariable Long id, Model model) {
-        model.addAttribute("question", questionService.getQuestionById(id));
+        Question question = questionService.findById(id).orElseThrow();
+        model.addAttribute("question", question);
         return "question/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String editQuestion(@PathVariable Long id, @ModelAttribute Question question) {
-        questionService.updateQuestion(id, question);
+        question.setId(id); // чтобы обновить, а не создать новый
+        questionService.saveQuestion(question);
         return "redirect:/polls/" + question.getPoll().getId();
     }
 
     @GetMapping("/delete/{id}")
     public String deleteQuestion(@PathVariable Long id) {
-        Long pollId = questionService.getQuestionById(id).getPoll().getId();
-        questionService.deleteQuestion(id);
+        Question question = questionService.findById(id).orElseThrow();
+        Long pollId = question.getPoll().getId();
+        questionService.deleteById(id);
         return "redirect:/polls/" + pollId;
     }
 }

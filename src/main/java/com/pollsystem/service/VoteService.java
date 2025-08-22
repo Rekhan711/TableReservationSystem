@@ -8,4 +8,5 @@ public interface VoteService {
     Vote saveVote(Vote vote);
     Optional<Vote> findById(Long id);
     List<Vote> findAll();
+    Vote castVote(Long optionId);
 }

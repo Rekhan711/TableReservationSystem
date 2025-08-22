@@ -16,7 +16,7 @@ public class PollController {
 
     @GetMapping
     public String listPolls(Model model) {
-        model.addAttribute("polls", pollService.getAllPolls());
+        model.addAttribute("polls", pollService.findAll()); // вместо getAllPolls
         return "poll/list";
     }
 
@@ -28,13 +28,13 @@ public class PollController {
 
     @PostMapping
     public String createPoll(@ModelAttribute Poll poll) {
-        pollService.createPoll(poll);
+        pollService.savePoll(poll); // вместо createPoll
         return "redirect:/polls";
     }
 
     @GetMapping("/{id}")
     public String viewPoll(@PathVariable Long id, Model model) {
-        model.addAttribute("poll", pollService.getPollById(id));
+        model.addAttribute("poll", pollService.findById(id).orElseThrow()); // вместо getPollById
         return "poll/view";
     }
 }
