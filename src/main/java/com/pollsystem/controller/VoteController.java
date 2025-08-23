@@ -14,7 +14,12 @@ public class VoteController {
 
     @PostMapping("/cast")
     public String castVote(@RequestParam Long optionId, @RequestParam Long pollId) {
+        // Джун: голосуем за выбранный вариант
+        // Мидл: @RequestParam берет данные из формы (optionId и pollId)
+        // Сеньор: voteService.castVote() выполняет бизнес-логику (проверки, сохранение)
         voteService.castVote(optionId);
+
+        // После голосования → редирект обратно к опросу
         return "redirect:/polls/" + pollId;
     }
 }

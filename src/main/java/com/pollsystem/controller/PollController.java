@@ -16,25 +16,36 @@ public class PollController {
 
     @GetMapping
     public String listPolls(Model model) {
-        model.addAttribute("polls", pollService.findAll()); // вместо getAllPolls
+        // Джун: достаем все опросы и передаем их в шаблон
+        // Мидл: pollService.findAll() возвращает список Poll
+        // Сеньор: MVC-связка → список будет доступен как ${polls} в poll/list.html
+        model.addAttribute("polls", pollService.findAll());
         return "poll/list";
     }
 
     @GetMapping("/create")
     public String createPollForm(Model model) {
+        // Джун: открываем форму создания опроса
+        // Мидл: кладем пустой Poll в модель для биндинга формы
         model.addAttribute("poll", new Poll());
         return "poll/create";
     }
 
     @PostMapping
     public String createPoll(@ModelAttribute Poll poll) {
-        pollService.savePoll(poll); // вместо createPoll
+        // Джун: сохраняем опрос
+        // Мидл: Poll автоматически мапится из формы HTML
+        // Сеньор: логика сохранения в сервисе
+        pollService.savePoll(poll);
         return "redirect:/polls";
     }
 
     @GetMapping("/{id}")
     public String viewPoll(@PathVariable Long id, Model model) {
-        model.addAttribute("poll", pollService.findById(id).orElseThrow()); // вместо getPollById
+        // Джун: показываем опрос по ID
+        // Мидл: если опроса нет, будет исключение
+        // Сеньор: poll передается в шаблон poll/view.html
+        model.addAttribute("poll", pollService.findById(id).orElseThrow());
         return "poll/view";
     }
 }

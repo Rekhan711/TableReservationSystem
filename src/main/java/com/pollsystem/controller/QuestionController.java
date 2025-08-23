@@ -16,6 +16,9 @@ public class QuestionController {
 
     @GetMapping("/create/{pollId}")
     public String createQuestionForm(@PathVariable Long pollId, Model model) {
+        // Джун: создаем новый вопрос
+        // Мидл: пробрасываем pollId, чтобы знать, к какому опросу он относится
+        // Сеньор: UI должен отрендерить форму question/create.html
         Question question = new Question();
         model.addAttribute("question", question);
         model.addAttribute("pollId", pollId);
@@ -24,14 +27,18 @@ public class QuestionController {
 
     @PostMapping("/create/{pollId}")
     public String createQuestion(@PathVariable Long pollId, @ModelAttribute Question question) {
-        // тут важно: вопрос должен ссылаться на опрос
-        // предполагается, что в Question есть setPoll()
+        // Джун: сохраняем вопрос
+        // Мидл: нужно привязать вопрос к опросу через setPoll()
+        // Сеньор: потом делаем редирект на страницу опроса
         questionService.saveQuestion(question);
         return "redirect:/polls/" + pollId;
     }
 
     @GetMapping("/edit/{id}")
     public String editQuestionForm(@PathVariable Long id, Model model) {
+        // Джун: достаем вопрос по ID и показываем в форме
+        // Мидл: если не найден → исключение
+        // Сеньор: шаблон question/edit.html использует объект question
         Question question = questionService.findById(id).orElseThrow();
         model.addAttribute("question", question);
         return "question/edit";
@@ -39,13 +46,19 @@ public class QuestionController {
 
     @PostMapping("/edit/{id}")
     public String editQuestion(@PathVariable Long id, @ModelAttribute Question question) {
-        question.setId(id); // чтобы обновить, а не создать новый
+        // Джун: обновляем вопрос
+        // Мидл: setId гарантирует, что это update, а не insert
+        // Сеньор: сохраняем и редиректим обратно к опросу
+        question.setId(id);
         questionService.saveQuestion(question);
         return "redirect:/polls/" + question.getPoll().getId();
     }
 
     @GetMapping("/delete/{id}")
     public String deleteQuestion(@PathVariable Long id) {
+        // Джун: удаляем вопрос
+        // Мидл: достаем pollId → нужно для редиректа
+        // Сеньор: после удаления редиректим обратно в опрос
         Question question = questionService.findById(id).orElseThrow();
         Long pollId = question.getPoll().getId();
         questionService.deleteById(id);

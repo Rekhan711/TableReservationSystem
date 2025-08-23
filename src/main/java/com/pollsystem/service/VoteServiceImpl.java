@@ -10,12 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Реализация {@link VoteService}.
+ * Отвечает за логику голосования и работу с репозиторием голосов.
+ */
 @Service
 @RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
-    private final OptionRepository optionRepository; // нужен для поиска варианта
+    private final OptionRepository optionRepository; // используется для поиска варианта ответа
 
     @Override
     public Vote saveVote(Vote vote) {
@@ -32,6 +36,13 @@ public class VoteServiceImpl implements VoteService {
         return voteRepository.findAll();
     }
 
+    /**
+     * Создаёт новый голос за указанный вариант.
+     *
+     * @param optionId идентификатор варианта
+     * @return сохранённый голос
+     * @throws IllegalArgumentException если вариант с таким ID не найден
+     */
     @Override
     public Vote castVote(Long optionId) {
         Option option = optionRepository.findById(optionId)
