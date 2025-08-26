@@ -24,7 +24,7 @@ public class Option {
     private Long id;
 
     /** Текст варианта ответа */
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 500)
     private String text;
 
     /** Связанный вопрос */
